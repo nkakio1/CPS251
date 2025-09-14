@@ -12,9 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import android.util.Log
 
 // Main activity class - entry point of the app
+
+
 class MainActivity : ComponentActivity() {
+    companion object {
+        private const val TAG = "MainActivity" //Prompted Gemini to tell me how logcat works in Kotlin
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Set light status bar (white icons on dark background)
@@ -23,6 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 HelloClass() // Call our main composable function
+                Log.i(TAG, "Calls HelloClass Function")
             }
         }
     }
@@ -50,5 +57,5 @@ fun HelloClass() {
 fun HelloClassPreview(){
     HelloClass() // Show the same UI as the main function
 }
-    
+
     
