@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.assn2"
+    namespace = "com.example.assn2_giterr_copy"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.assn2"
+        applicationId = "com.example.assn2_giterr_copy"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

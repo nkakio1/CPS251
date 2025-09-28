@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Assn1"
+rootProject.name = "Assn1_giterr_copy"
 include(":app")
