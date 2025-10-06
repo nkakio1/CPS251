@@ -8,24 +8,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-/**
- * This project covers concepts from Chapter 7 lessons:
- * - "Validation" - for form validation and error handling
- * - "Managing Input State" - for state management in forms
- * - "Text Fields" - for input field styling and error states
- * - "Regular Expressions" - for email, phone, and ZIP code validation
- *
- * Students should review these lessons before starting:
- * - Validation lesson for form validation patterns
- * - Managing Input State lesson for state management
- * - Text Fields lesson for input field styling
- * - Regular Expressions lesson for validation patterns
- */
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,108 +31,102 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ContactValidatorApp() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .padding(top = 50.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Contact Information",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-        
-        ContactForm()
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(top = 50.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Contact Information",
+                fontSize = 30.sp,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+            ContactForm()
+        }
     }
 }
 
 @Composable
 fun ContactForm() {
-    // TODO: Create state variables for form fields
-    // Hint: You need variables for:
-    // - name (string for user's name)
-    // - email (string for email address)
-    // - phone (string for phone number)
-    // - zipCode (string for ZIP code)
-    // Use remember and mutableStateOf for each
-    // See "Validation" lesson for examples of state management
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var phone by rememberSaveable { mutableStateOf("") }
+    var zipCode by rememberSaveable { mutableStateOf("") }
 
-    // TODO: Create validation state variables
-    // Hint: You need boolean variables for:
-    // - isNameValid, isEmailValid, isPhoneValid, isZipValid
-    // Use remember and mutableStateOf for each
-    // See "Managing Input State" lesson for examples of validation state management
 
-    // TODO: Create submitted information state variable
-    // Hint: You need a variable for: submittedInfo (string for displaying submitted data)
-    // Use remember and mutableStateOf
+    val isNameValid = name.trim().length >= 2
+    val isEmailValid = validateEmail(email)
+    val isPhoneValid = validatePhone(phone)
+    val isZipValid = validateZipCode(zipCode)
+
+    var submittedInfo by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val isFormValid =
+        isNameValid && isEmailValid && isPhoneValid && isZipValid &&
+                name.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && zipCode.isNotBlank()
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.surface,
-                // TODO: Apply a RoundedCornerShape with a reasonable dp value
-                // See "Text Fields" lesson for examples of shape customization
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             )
-            // TODO: Add horizontal and vertical padding with a reasonable dp value
-            // See "Text Fields" lesson for examples of padding
-            .padding(horizontal = 12.dp, vertical = 2.dp),
-        // TODO: Arrange items vertically with a reasonable dp spacing
-        // See "Text Fields" lesson for examples of vertical arrangement
-        verticalArrangement = Arrangement.spacedBy(/* TODO: Provide a reasonable value for vertical spacing */ 2.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // TODO: Call the NameField composable here
-        // Pass the name state, validation state, and onValueChange lambda
-        // See "Text Fields" lesson for examples of error state styling
+        NameField(
+            name = name,
+            isNameValid = isNameValid,
+            onValueChange = { name = it }
+        )
 
-        // TODO: Call the EmailField composable here
-        // Pass the email state, validation state, and onValueChange lambda
-        // See "Validation" lesson for email validation examples
+        EmailField(
+            email = email,
+            isEmailValid = isEmailValid,
+            onValueChange = { email = it }
+        )
 
-        // TODO: Call the PhoneField composable here
-        // Pass the phone state, validation state, and onValueChange lambda
-        // See "Regular Expressions" lesson for phone number validation patterns
+        PhoneField(
+            phone = phone,
+            isPhoneValid = isPhoneValid,
+            onValueChange = { phone = it }
+        )
 
-        // TODO: Call the ZipCodeField composable here
-        // Pass the zipCode state, validation state, and onValueChange lambda
-        // See "Regular Expressions" lesson for ZIP code validation examples
+        ZipCodeField(
+            zipCode = zipCode,
+            isZipValid = isZipValid,
+            onValueChange = { zipCode = it }
+        )
 
-        // TODO: Create the Submit button
-        // Use Button composable with enabled state based on all validations
-        // The button should only be enabled when all fields are valid and not empty
-        // See "Validation" lesson for examples of complex button state management
+        Button(
+            onClick = {
+                if (isFormValid) {
+                    submittedInfo =
+                        "Name: ${name.trim()}\nEmail: ${email.trim()}\nPhone: ${phone.trim()}\nZIP: ${zipCode.trim()}"
+                }
+            },
+            enabled = isFormValid,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Submit")
+        }
 
-        // TODO: Add display for submitted information
+        submittedInfo?.let { it ->
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = it,
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
+        }
     }
-
-    // TODO: Call the NameField composable here
-        // Pass the name state, validation state, and onValueChange lambda
-        // See "Text Fields" lesson for examples of error state styling
-
-        // TODO: Call the EmailField composable here
-        // Pass the email state, validation state, and onValueChange lambda
-        // See "Validation" lesson for email validation examples
-
-        // TODO: Call the PhoneField composable here
-        // Pass the phone state, validation state, and onValueChange lambda
-        // See "Regular Expressions" lesson for phone number validation patterns
-
-        // TODO: Call the ZipCodeField composable here
-        // Pass the zipCode state, validation state, and onValueChange lambda
-        // See "Regular Expressions" lesson for ZIP code validation examples
-
-        // TODO: Create the Submit button
-        // Use Button composable with enabled state based on all validations
-        // The button should only be enabled when all fields are valid and not empty
-        // See "Validation" lesson for examples of complex button state management
-
-        // TODO: Add display for submitted information
-    }
-
+}
 
 @Composable
 fun NameField(
@@ -149,9 +134,20 @@ fun NameField(
     isNameValid: Boolean,
     onValueChange: (String) -> Unit
 ) {
-    // TODO: Create the name input field
-    // 
-    // See "Text Fields" lesson for complete examples of error state styling
+    OutlinedTextField(
+        value = name,
+        onValueChange = onValueChange,
+        label = { Text("Full Name") },
+        placeholder = { Text("John Smith") },
+        singleLine = true,
+        isError = name.isNotBlank() && !isNameValid,
+        supportingText = {
+            if (name.isNotBlank() && !isNameValid) {
+                Text("Name must be at least 2 characters.")
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -160,9 +156,20 @@ fun EmailField(
     isEmailValid: Boolean,
     onValueChange: (String) -> Unit
 ) {
-    // TODO: Create the email input field
-    // 
-    // See "Validation" lesson for email validation examples with regex
+    OutlinedTextField(
+        value = email,
+        onValueChange = onValueChange,
+        label = { Text("Email") },
+        placeholder = { Text("user@example.com") },
+        singleLine = true,
+        isError = email.isNotBlank() && !isEmailValid,
+        supportingText = {
+            if (email.isNotBlank() && !isEmailValid) {
+                Text("Enter a valid email (e.g. name@domain.com).")
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -171,10 +178,23 @@ fun PhoneField(
     isPhoneValid: Boolean,
     onValueChange: (String) -> Unit
 ) {
-    // TODO: Create the phone input field
-    // Use OutlinedTextField with:
-    // 
-    // See "Regular Expressions" lesson for phone number validation patterns and examples
+    OutlinedTextField(
+        value = phone,
+        onValueChange = { input ->
+            val filtered = input.filter { it.isDigit() || it == '-' || it == '/' }.take(12)
+            onValueChange(filtered)
+        },
+        label = { Text("Phone") },
+        placeholder = { Text("123-456-7890") },
+        singleLine = true,
+        isError = phone.isNotBlank() && !isPhoneValid,
+        supportingText = {
+            if (phone.isNotBlank() && !isPhoneValid) {
+                Text("Format: 123-456-7890")
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -183,34 +203,47 @@ fun ZipCodeField(
     isZipValid: Boolean,
     onValueChange: (String) -> Unit
 ) {
-    // TODO: Create the ZIP code input field
-    // Use OutlinedTextField with:
-    // 
-    // See "Regular Expressions" lesson for ZIP code validation examples
+    OutlinedTextField(
+        value = zipCode,
+        onValueChange = { input ->
+            onValueChange(input.filter { it.isDigit() }.take(5))
+        },
+        label = { Text("U.S. ZIP Code") },
+        placeholder = { Text("5 digits") },
+        singleLine = true,
+        isError = zipCode.isNotBlank() && !isZipValid,
+        supportingText = {
+            if (zipCode.isNotBlank() && !isZipValid) {
+                Text("ZIP must be exactly 5 digits.")
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
-// TODO: Create validation functions using regex
-// Hint: You need three functions:
-// 1. validateEmail() - checks email format using regex pattern
-//    
-// 2. validatePhone() - checks for phone numbers like 123-456-7890 or 123/456/7890
-//    
-// 3. validateZipCode() - checks for exactly 5 digits
-//    
-// Use the .matches() function with regex patterns
-// See "Regular Expressions" lesson for complete regex examples and validation patterns
+private val EMAIL_REGEX =
+    Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 
-// You will need to enable the submit button when all the fields are valid:
-// 
-// See "Validation" lesson for detailed examples of complex button state management
-//when button is clicked and all fields are valid and not empty, the submitted information should be displayed
-//in a text field below the button.
+private val PHONE_REGEX =
+    Regex("^\\d{3}[-/]\\d{3}[-/]\\d{4}$")
 
-/**
- * Preview for Android Studio's design view.
- */
+private val ZIP_REGEX =
+    Regex("^\\d{5}$")
+
+private fun validateEmail(value: String): Boolean =
+    value.trim().matches(EMAIL_REGEX)
+
+private fun validatePhone(value: String): Boolean =
+    value.trim().matches(PHONE_REGEX)
+
+private fun validateZipCode(value: String): Boolean =
+    value.trim().matches(ZIP_REGEX)
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ContactValidatorAppPreview() {
-    ContactValidatorApp()
+    MaterialTheme {
+        ContactValidatorApp()
+    }
 }
