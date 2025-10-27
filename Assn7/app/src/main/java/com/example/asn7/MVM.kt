@@ -80,7 +80,6 @@ fun StudentGradeManager(vm: MainViewModel) {
             }
         }
         StudentList(students = vm.students, onRemove = vm::removeStudent)
-        ClearStudentsButton(onConfirmClear = { vm.clearStudents() })
     }
 }
 
@@ -192,41 +191,7 @@ fun StudentRow(student: Student, onRemove: (Student) -> Unit) {
     }
 }
 
-@Composable
-fun ClearStudentsButton(onConfirmClear: () -> Unit) {
-    var showDialog by remember { mutableStateOf(false) }
 
-    Button(
-        onClick = { showDialog = true },
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text("Clear All Students", color = MaterialTheme.colorScheme.onErrorContainer)
-    }
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("Confirm Clear") },
-            text = { Text("Are you sure you want to remove all students? This cannot be undone.") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onConfirmClear()
-                        showDialog = false
-                    }
-                ) {
-                    Text("Yes, Clear All", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("Cancel")
-                }
-            }
-        )
-    }
-}
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 800, name = "Full App Preview")
 @Composable
