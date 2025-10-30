@@ -1,6 +1,5 @@
 package com.example.asn8
 
-import com.example.contacts.ContactDao
 import kotlinx.coroutines.flow.Flow
 
 class ContactRepository(private val contactDao: ContactDao) {

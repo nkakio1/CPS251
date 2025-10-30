@@ -19,8 +19,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.contacts.ContactViewModel
-import com.example.contacts.SortOrder
 
 @Composable
 fun ContactScreen(viewModel: ContactViewModel) {
@@ -38,9 +36,9 @@ fun ContactScreen(viewModel: ContactViewModel) {
     // --- Scroll + layout setup ---
     val cfg = LocalConfiguration.current
     val screenHeightDp = cfg.screenHeightDp
-    val isCompact = screenHeightDp < 520               // <-- ADDED: only scroll on short screens
+    val isCompact = screenHeightDp < 520
     val formScroll = rememberScrollState()
-    val maxFormHeight = (screenHeightDp.dp * 0.55f)    // <-- ADDED: used only when compact
+    val maxFormHeight = (screenHeightDp.dp * 0.55f)
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -48,11 +46,10 @@ fun ContactScreen(viewModel: ContactViewModel) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // ---------- TOP BOX (FORM) ----------
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .then(                                   // <-- CHANGED: apply scroll/height only when compact
+                    .then(
                         if (isCompact) {
                             Modifier
                                 .heightIn(max = maxFormHeight)
@@ -129,7 +126,7 @@ fun ContactScreen(viewModel: ContactViewModel) {
                 OutlinedTextField(
                     value = search,
                     onValueChange = { search = it },
-                    label = { Text("Search Name") },
+                    label = { Text("Search Name") },                           //Q1!!!!
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -143,11 +140,11 @@ fun ContactScreen(viewModel: ContactViewModel) {
                 )
             }
 
-            // ---------- CONTACTS LIST (separate scroll) ----------
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // takes remaining space, scrolls independently
+                    .weight(1f)
             ) {
                 items(contacts, key = { it.id }) { contact ->
                     Row(

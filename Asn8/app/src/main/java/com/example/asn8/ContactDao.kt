@@ -1,10 +1,9 @@
-package com.example.contacts
+package com.example.asn8
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.asn8.Contact
 import kotlinx.coroutines.flow.Flow
 
 @Dao

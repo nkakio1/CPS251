@@ -1,12 +1,10 @@
-package com.example.contacts
+package com.example.asn8
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.asn8.Contact
-import com.example.asn8.ContactDatabase
-import com.example.asn8.ContactRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,8 +21,9 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     private val _sortOrder = MutableStateFlow(SortOrder.ASC)
     val sortOrder: StateFlow<SortOrder> = _sortOrder.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val allContacts: Flow<List<Contact>> = combine(
-        _searchQuery,
+        _searchQuery,                                                       //Q1!!!!!!
         _sortOrder
     ) { query, sortOrder ->
         when (sortOrder) {
