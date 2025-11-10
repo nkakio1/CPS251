@@ -8,7 +8,8 @@ class ContactRepository(private val contactDao: ContactDao) {
 
     suspend fun delete(contact: Contact) = contactDao.delete(contact)
 
-    fun getAllContacts(): Flow<List<Contact>> = contactDao.getAllContacts()
+    fun getAllContacts(): Flow<List<Contact>> =
+        contactDao.getAllContacts()
 
     fun findContacts(searchQuery: String): Flow<List<Contact>> =
         contactDao.findContacts(searchQuery)

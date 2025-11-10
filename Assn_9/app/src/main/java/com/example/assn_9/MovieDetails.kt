@@ -84,7 +84,6 @@ fun MovieDetailsScreen(
                                 .height(220.dp)
                                 .clip(RoundedCornerShape(12.dp)),
                             contentScale = ContentScale.Fit,
-                            // ✅ Use solid-color painters instead of system drawables that crash
                             placeholder = ColorPainter(Color(0xFFEAEAEA)),
                             error = ColorPainter(Color(0xFFEEEEEE)),
                             fallback = ColorPainter(Color(0xFFEEEEEE))

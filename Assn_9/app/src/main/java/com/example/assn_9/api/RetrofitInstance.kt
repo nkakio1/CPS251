@@ -5,12 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Matches the site’s Chapter 12 pattern:
- * - Singleton object that builds Retrofit
- * - Base URL ends with "/"
- * - Gson converter
- */
+
 object RetrofitInstance {
     const val API_KEY = "9cee3257"
     private const val BASE_URL = "https://www.omdbapi.com/"
@@ -24,8 +19,8 @@ object RetrofitInstance {
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)                                  // like the site’s example
-        .addConverterFactory(GsonConverterFactory.create()) // JSON <-> Kotlin
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
 

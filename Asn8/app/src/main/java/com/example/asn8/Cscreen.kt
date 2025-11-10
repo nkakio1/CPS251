@@ -173,7 +173,7 @@ fun ContactScreen(viewModel: ContactViewModel) {
                 }
             }
 
-            // ---------- DELETE DIALOG ----------
+
             if (pendingDelete != null) {
                 AlertDialog(
                     onDismissRequest = { pendingDelete = null },

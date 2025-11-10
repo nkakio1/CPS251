@@ -2,7 +2,6 @@ package com.example.assn_9.api
 
 import com.google.gson.annotations.SerializedName
 
-// ---------- Search response ----------
 
 data class OmdbSearchResponse(
     @SerializedName("Search") val search: List<MovieSearchItem>?,
@@ -19,7 +18,6 @@ data class MovieSearchItem(
     @SerializedName("Poster") val poster: String?
 )
 
-// ---------- Details response ----------
 
 data class OmdbMovieDetailResponse(
     @SerializedName("Title") val title: String?,
