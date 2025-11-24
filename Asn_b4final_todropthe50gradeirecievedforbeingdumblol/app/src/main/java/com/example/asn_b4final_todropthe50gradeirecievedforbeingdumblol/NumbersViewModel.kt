@@ -1,18 +1,11 @@
 package com.example.asn_b4final_todropthe50gradeirecievedforbeingdumblol
 
-import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import kotlin.math.abs
 
-/**
- * UI state for the sliding numbers puzzle.
- *
- * tiles: list of 9 ints (1..8 + 0 for empty).
- * moves: number of successful tile moves.
- * isSolved: whether the puzzle is currently solved.
- */
 data class NumbersUiState(
     val tiles: List<Int>,
     val moves: Int,
@@ -34,8 +27,6 @@ class NumbersViewModel : ViewModel() {
     fun onResetClicked() {
         uiState = newShuffledPuzzleState()
     }
-
-    // ---- Logic functions below (no UI) ----
 
     private fun newShuffledPuzzleState(): NumbersUiState {
         val tiles = generateShuffledSolvableTiles()
@@ -95,7 +86,6 @@ class NumbersViewModel : ViewModel() {
                 if (numbers[i] > numbers[j]) inversions++
             }
         }
-        // For odd grid, solvable if inversions is even
         return inversions % 2 == 0
     }
 

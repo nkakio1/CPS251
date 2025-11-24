@@ -3,30 +3,54 @@ package com.example.asn_b4final_todropthe50gradeirecievedforbeingdumblol
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.math.roundToInt
 
-/**
- * Root screen composable used in MainActivity.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SlidingNumberUI(
@@ -74,7 +98,7 @@ fun SlidingNumberUI(
                     WinMessageCard(moves = state.moves)
                 }
 
-                StatsRow(
+                MovesAndStatusRow(
                     moves = state.moves,
                     isSolved = state.isSolved
                 )
@@ -88,7 +112,7 @@ fun SlidingNumberUI(
                     )
                 ) {
                     Text(
-                        text = "Reset",
+                        text = "New Puzzle",
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -97,7 +121,8 @@ fun SlidingNumberUI(
 
                 PuzzleGrid(
                     tiles = state.tiles,
-                    onTileClick = { tile -> numbersViewModel.onTileClicked(tile) }
+                    isSolved = state.isSolved,
+                    onTileMove = { tile -> numbersViewModel.onTileClicked(tile) }
                 )
             }
         }
@@ -132,13 +157,13 @@ private fun WinMessageCard(moves: Int) {
 }
 
 @Composable
-private fun StatsRow(
+private fun MovesAndStatusRow(
     moves: Int,
     isSolved: Boolean
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         StatCard(
             label = "Moves",
@@ -184,7 +209,8 @@ private fun StatCard(
 @Composable
 private fun PuzzleGrid(
     tiles: List<Int>,
-    onTileClick: (Int) -> Unit
+    isSolved: Boolean,
+    onTileMove: (Int) -> Unit
 ) {
     Box(
         modifier = Modifier.size(320.dp),
@@ -200,7 +226,8 @@ private fun PuzzleGrid(
             itemsIndexed(tiles) { _, tile ->
                 NumberTile(
                     number = tile,
-                    onClick = { if (tile != 0) onTileClick(tile) }
+                    enabled = !isSolved,
+                    onMoveRequested = { if (tile != 0) onTileMove(tile) }
                 )
             }
         }
@@ -210,8 +237,10 @@ private fun PuzzleGrid(
 @Composable
 private fun NumberTile(
     number: Int,
-    onClick: () -> Unit
+    enabled: Boolean,
+    onMoveRequested: () -> Unit
 ) {
+    // Empty space: invisible but still takes up space
     if (number == 0) {
         Box(
             modifier = Modifier.size(90.dp)
@@ -219,23 +248,65 @@ private fun NumberTile(
         return
     }
 
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
 
-    val targetScale = if (isPressed) 0.9f else 1f
-    val scale by animateFloatAsState(targetValue = targetScale, label = "tileScale")
+    val animatedOffsetX by animateFloatAsState(
+        targetValue = offsetX,
+        label = "tileOffsetX"
+    )
+    val animatedOffsetY by animateFloatAsState(
+        targetValue = offsetY,
+        label = "tileOffsetY"
+    )
 
-    val targetElevation = if (isPressed) 2.dp else 6.dp
-    val elevation by animateDpAsState(targetValue = targetElevation, label = "tileElevation")
+    val targetScale = if (isDragging) 0.9f else 1f
+    val scale by animateFloatAsState(
+        targetValue = targetScale,
+        label = "tileScale"
+    )
+
+    val targetElevation = if (isDragging) 2.dp else 6.dp
+    val elevation by animateDpAsState(
+        targetValue = targetElevation,
+        label = "tileElevation"
+    )
 
     Surface(
         modifier = Modifier
             .size(90.dp)
             .scale(scale)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) { onClick() },
+            .offset {
+                IntOffset(
+                    animatedOffsetX.roundToInt(),
+                    animatedOffsetY.roundToInt()
+                )
+            }
+            .pointerInput(enabled) {
+                if (!enabled) return@pointerInput
+
+                detectDragGestures(
+                    onDragStart = {
+                        isDragging = true
+                    },
+                    onDrag = { _, dragAmount ->
+                        offsetX += dragAmount.x
+                        offsetY += dragAmount.y
+                    },
+                    onDragEnd = {
+                        isDragging = false
+                        offsetX = 0f
+                        offsetY = 0f
+                        onMoveRequested()
+                    },
+                    onDragCancel = {
+                        isDragging = false
+                        offsetX = 0f
+                        offsetY = 0f
+                    }
+                )
+            },
         shape = RoundedCornerShape(12.dp),
         color = Color(0xFFE3F2FD),
         shadowElevation = elevation
