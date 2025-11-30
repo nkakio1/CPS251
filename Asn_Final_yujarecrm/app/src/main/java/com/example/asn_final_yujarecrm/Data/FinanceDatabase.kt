@@ -1,4 +1,4 @@
-package com.example.finalproject.data
+package com.example.asn_final_yujarecrm.Data
 
 import androidx.room.Database
 import androidx.room.Room

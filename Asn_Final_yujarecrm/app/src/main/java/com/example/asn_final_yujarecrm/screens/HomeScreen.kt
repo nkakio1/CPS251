@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
-import com.example.finalproject.data.Transaction
-import com.example.finalproject.data.TransactionType
+import com.example.asn_final_yujarecrm.Data.Transaction
+import com.example.asn_final_yujarecrm.Data.TransactionType
 import java.text.NumberFormat
 import java.util.Date
 
@@ -43,14 +43,11 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
-            // Balance Card
             BalanceCard(balance)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Income/Expense Row
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                // Matches screenshot: Green background
                 SummaryCard(
                     title = "Income",
                     amount = income,
@@ -58,7 +55,6 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
                     textColor = Color.Black,
                     modifier = Modifier.weight(1f)
                 )
-                // Matches screenshot: Red/Salmon background
                 SummaryCard(
                     title = "Expense",
                     amount = expense,
@@ -70,7 +66,6 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Quick Actions
             Text("Quick Actions", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -80,7 +75,6 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Recent Transactions Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,10 +86,8 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
                 }
             }
 
-            // List
             LazyColumn {
                 items(recentTransactions.take(5)) { transaction ->
-                    // Home screen items don't have delete button in screenshot
                     TransactionItem(
                         transaction = transaction,
                         showDelete = false,
@@ -110,9 +102,7 @@ fun HomeScreen(viewModel: FinanceViewModel, navController: NavController) {
 @Composable
 fun BalanceCard(balance: Double) {
     val isPositive = balance >= 0
-    // Screenshot colors: Positive = Light Purple, Negative = Light Pink
     val containerColor = if (isPositive) Color(0xFFE8DEF8) else Color(0xFFFFDAD6)
-    // The requirement was for text to NOT be red, so we force Black here
     val contentColor = Color.Black
 
     val icon = if (isPositive) Icons.Default.CheckCircle else Icons.Default.Warning

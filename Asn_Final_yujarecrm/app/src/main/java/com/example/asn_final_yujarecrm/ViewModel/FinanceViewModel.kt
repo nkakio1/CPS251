@@ -3,7 +3,12 @@ package com.example.asn_final_yujarecrm.ViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.finalproject.data.*
+import com.example.asn_final_yujarecrm.Data.Category
+import com.example.asn_final_yujarecrm.Data.CategoryDao
+import com.example.asn_final_yujarecrm.Data.FinanceDatabase
+import com.example.asn_final_yujarecrm.Data.Transaction
+import com.example.asn_final_yujarecrm.Data.TransactionDao
+import com.example.asn_final_yujarecrm.Data.TransactionType
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

@@ -12,10 +12,10 @@ import androidx.navigation.navArgument
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModelFactory
 import com.example.asn_final_yujarecrm.screens.AddEditTransactionScreen
-import com.example.finalproject.data.FinanceDatabase
+import com.example.asn_final_yujarecrm.Data.FinanceDatabase
 import com.example.asn_final_yujarecrm.screens.HomeScreen
 import com.example.asn_final_yujarecrm.screens.CategoryManagementScreen
-import com.example.finalproject.ui.TransactionListScreen
+import com.example.asn_final_yujarecrm.screens.TransactionListScreen
 
 
 class MainActivity : ComponentActivity() {

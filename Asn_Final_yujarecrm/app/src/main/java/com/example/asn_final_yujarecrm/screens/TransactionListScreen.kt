@@ -1,4 +1,4 @@
-package com.example.finalproject.ui
+package com.example.asn_final_yujarecrm.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
-import com.example.asn_final_yujarecrm.screens.TransactionItem
-import com.example.finalproject.data.Transaction
+import com.example.asn_final_yujarecrm.Data.Transaction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

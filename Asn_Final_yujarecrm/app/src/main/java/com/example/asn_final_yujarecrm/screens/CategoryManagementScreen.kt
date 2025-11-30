@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
-import com.example.finalproject.data.Category
-import com.example.finalproject.data.TransactionType
+import com.example.asn_final_yujarecrm.Data.Category
+import com.example.asn_final_yujarecrm.Data.TransactionType
 import androidx.core.graphics.toColorInt
 
 @OptIn(ExperimentalMaterial3Api::class)

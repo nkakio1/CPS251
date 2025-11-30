@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
-import com.example.finalproject.data.Transaction
-import com.example.finalproject.data.TransactionType
+import com.example.asn_final_yujarecrm.Data.Transaction
+import com.example.asn_final_yujarecrm.Data.TransactionType
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -43,7 +43,6 @@ fun AddEditTransactionScreen(
     var date by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var showDatePicker by remember { mutableStateOf(false) }
 
-    // Logic: Reset category selection when switching types (e.g. Expense -> Income)
     LaunchedEffect(selectedType) {
         if (transactionId == null) {
             selectedCategoryId = null
@@ -63,7 +62,6 @@ fun AddEditTransactionScreen(
         }
     }
 
-    // Shared Save Function
     fun saveTransaction() {
         if (description.isBlank() || amount.isBlank() || selectedCategoryId == null) {
             Toast.makeText(context, "Please select a category and fill all fields", Toast.LENGTH_SHORT).show()
@@ -138,7 +136,6 @@ fun AddEditTransactionScreen(
                     Text("Expense")
                 }
 
-                // Income Button
                 Button(
                     onClick = { selectedType = TransactionType.INCOME },
                     modifier = Modifier.weight(1f),
