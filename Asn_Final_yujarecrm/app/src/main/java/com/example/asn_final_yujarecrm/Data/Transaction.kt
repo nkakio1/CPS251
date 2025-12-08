@@ -21,7 +21,7 @@ data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val amount: Double,
-    val date: Long, // Store as timestamp
+    val date: Long,
     val description: String,
     val categoryId: Long,
     val type: TransactionType

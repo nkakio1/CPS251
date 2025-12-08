@@ -9,7 +9,7 @@ data class Category(
     val id: Long = 0,
     val name: String,
     val type: TransactionType,
-    val color: String = "#6200EE", // Default Material color
-    val budgetLimit: Double? = null // Optional budget limit
+    val color: String = "#6200EE",
+    val budgetLimit: Double? = null
 )
 

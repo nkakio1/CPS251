@@ -21,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
 import com.example.asn_final_yujarecrm.Data.Category
 import com.example.asn_final_yujarecrm.Data.TransactionType
 import androidx.core.graphics.toColorInt
+import com.example.asn_final_yujarecrm.viewmodel.FinanceViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

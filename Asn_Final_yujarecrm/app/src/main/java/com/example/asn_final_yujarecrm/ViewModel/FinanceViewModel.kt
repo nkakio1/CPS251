@@ -1,27 +1,23 @@
-package com.example.asn_final_yujarecrm.ViewModel
+package com.example.asn_final_yujarecrm.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.asn_final_yujarecrm.Data.Category
-import com.example.asn_final_yujarecrm.Data.CategoryDao
-import com.example.asn_final_yujarecrm.Data.FinanceDatabase
 import com.example.asn_final_yujarecrm.Data.Transaction
-import com.example.asn_final_yujarecrm.Data.TransactionDao
 import com.example.asn_final_yujarecrm.Data.TransactionType
+import com.example.asn_final_yujarecrm.data.FinanceRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class FinanceViewModel(private val transactionDao: TransactionDao, private val categoryDao: CategoryDao) : ViewModel() {
-
-    // UI State for transactions and categories
-    val allTransactions: StateFlow<List<Transaction>> = transactionDao.getAllTransactions()
+class FinanceViewModel(private val repository: FinanceRepository) : ViewModel() {
+    
+    val allTransactions: StateFlow<List<Transaction>> = repository.allTransactions
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val allCategories: StateFlow<List<Category>> = categoryDao.getAllCategories()
+    val allCategories: StateFlow<List<Category>> = repository.allCategories
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // Calculated Totals
     val totalIncome: StateFlow<Double> = allTransactions.map { list ->
         list.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
@@ -34,37 +30,37 @@ class FinanceViewModel(private val transactionDao: TransactionDao, private val c
         income - expense
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
-    // Database Actions
+
     fun addTransaction(transaction: Transaction) = viewModelScope.launch {
-        transactionDao.insertTransaction(transaction)
+        repository.insertTransaction(transaction)
     }
 
     fun updateTransaction(transaction: Transaction) = viewModelScope.launch {
-        transactionDao.updateTransaction(transaction)
+        repository.updateTransaction(transaction)
     }
 
     fun deleteTransaction(transaction: Transaction) = viewModelScope.launch {
-        transactionDao.deleteTransaction(transaction)
+        repository.deleteTransaction(transaction)
     }
 
     fun addCategory(category: Category) = viewModelScope.launch {
-        categoryDao.insertCategory(category)
+        repository.insertCategory(category)
     }
 
     fun deleteCategory(category: Category) = viewModelScope.launch {
-        categoryDao.deleteCategory(category)
+        repository.deleteCategory(category)
     }
 
     suspend fun getTransactionById(id: Long): Transaction? {
-        return transactionDao.getTransactionById(id)
+        return repository.getTransactionById(id)
     }
 }
 
-class FinanceViewModelFactory(private val database: FinanceDatabase) : ViewModelProvider.Factory {
+class FinanceViewModelFactory(private val repository: FinanceRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FinanceViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return FinanceViewModel(database.transactionDao(), database.categoryDao()) as T
+            return FinanceViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -20,9 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.asn_final_yujarecrm.ViewModel.FinanceViewModel
 import com.example.asn_final_yujarecrm.Data.Transaction
 import com.example.asn_final_yujarecrm.Data.TransactionType
+import com.example.asn_final_yujarecrm.viewmodel.FinanceViewModel
 import java.text.NumberFormat
 import java.util.Date
 
